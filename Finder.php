@@ -556,6 +556,18 @@ class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
+     * Force the use of UNIX paths when recursing directories.
+     *
+     * @return $this
+     */
+    public function useUnixPaths(): static
+    {
+        $this->unixPaths = true;
+
+        return $this;
+    }
+
+    /**
      * Tells finder to ignore unreadable directories.
      *
      * By default, scanning unreadable directories content throws an AccessDeniedException.
@@ -735,6 +747,10 @@ class Finder implements \IteratorAggregate, \Countable
 
         if ($this->followLinks) {
             $flags |= \RecursiveDirectoryIterator::FOLLOW_SYMLINKS;
+        }
+
+        if ($this->unixPaths) {
+            $flags |= \RecursiveDirectoryIterator::UNIX_PATHS;
         }
 
         $iterator = new Iterator\RecursiveDirectoryIterator($dir, $flags, $this->ignoreUnreadableDirs);
